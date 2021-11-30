@@ -1,40 +1,49 @@
-import sys
 import os
-import requests
-from time import sleep
 import socket
-import netifaces as ni
+import requests
+import platform
+from time import sleep
 
-web_link_file = "/home/pi/pi_auto/web_test.config"
-config_folder  = "/home/pi/pi_auto/udp/server_config_dir"
-hostname_file = "/etc/hostname"
+web_link_file = r"C:\Users\jacky.lin\Desktop\web_test.config"
+config_folder = r"C:\Users\jacky.lin\Desktop\Send_udp_new211129\server_config_dir"
 file_list = os.listdir(config_folder)
+
+
+def validIPv4Address(ipaddr):
+    ret = False
+
+    try:
+        socket.inet_aton(ipaddr)
+        ret = True
+        print("valid ipv4 address")
+    except socket.error:
+        print("socket error")
     
+    return ret
+
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.255.255.255', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
+    
+
 def main():
     while True:
         try:
-            ni.ifaddresses('wlan0')
-            #print(len(ni.ifaddresses('wlan0')))
-            #print("==========")
-            if len(ni.ifaddresses('wlan0')) >= 3:
-                client_ip=ni.ifaddresses('wlan0')[ni.AF_INET][0]['addr']
-                #print("===>")
-                print("%s " % client_ip)
-            
-            #hostname
-            hostname="raspberrypi"
-            if os.path.exists(hostname_file):
-        
-                fp = open(hostname_file, "r")
-                line=fp.readline()
-                fp.close()
+           #hostname
+            platform.node()
+            hostname=socket.gethostname()
+            #client_ip 
+            client_ip = get_ip()
 
-                line=line.replace("\n", "")
-
-                hostname=line
-                print("%s" % hostname)
-
-            #web test
+           #web test
             web_ret=0
             if os.path.exists(web_link_file):
 
@@ -49,11 +58,11 @@ def main():
                     web_ret=1
             else:
                 print("FileNotExist")
-
-           
+            
+            
             for item in file_list:
-                path = config_folder + '/' + item
-        
+                path = config_folder + '\\' + item
+                
                 if os.path.exists(path):
                     with open (path , 'r') as r:
                         for line in r:
@@ -68,14 +77,27 @@ def main():
                                 s.close()
                 else:
                    print("udp config not found")
-            
+                            
         except Exception as e:
             print(e)
         sleep(60)
-
     
 if __name__ == "__main__" :
     main()
+
+
         
+
+    
+
+
+
+
+
+    
+
+
+
+
 
 
