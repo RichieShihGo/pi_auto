@@ -1,0 +1,13 @@
+[Unit]
+Description=Send UDP
+After=multi-user.target
+Conflicts=getty@tty1.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/pi_auto/udp
+ExecStart=/usr/bin/python3 /home/pi/pi_auto/udp/udp_client.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
