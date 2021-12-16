@@ -22,7 +22,8 @@ def ssh2(ip,username,passwd,cmd):
     print ('%s\tError\n'%(ip))
     
 if __name__=='__main__': 
-  cmd = ['cd /home/pi ; \
+  cmd = [
+                 'cd /home/pi ; \
                  tar zxvf send_udp.tar.gz ; \
                  sudo chmod 644 pi_auto_new_setting.py ; \
                  sudo python3 pi_auto_new_setting.py ; \
@@ -42,13 +43,14 @@ if __name__=='__main__':
                  '
                 ]
   
-  username = "pi" #使;用者名稱 
-  passwd = "Magton!c"  #密碼 
+  username = "" #使;用者名稱 
+  passwd = ""  #密碼 
 
   print ("Begin......")
 
-ip = ('10.192.172.120',
-          '10.192.172.116'
+ip = (
+          '127.0.0.1',
+          '127.0.0.2'
           )
 
 for ip in ip:
